@@ -1,4 +1,4 @@
-import 'package:testapp/view/housepage.dart';
+import 'package:testapp/housepages/housepage.dart';
 import 'package:flutter/material.dart';
 
 class NearYou extends StatefulWidget {

@@ -3,9 +3,15 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:testapp/view/loginpage.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  String? firstname;
+  String? lastname;
+  String? phonenumber;
+  ProfilePage({Key? key, this.firstname, this.lastname, this.phonenumber})
+      : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -72,12 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: imageFile != null
                         ? CircleAvatar(
                             radius: 60.0,
-                            // ignore: unnecessary_null_comparison
-                            backgroundImage: FileImage(imageFile!)
-
-                            //child: Image(
-                            // image: AssetImage('assets/avatar.png'),
-                            )
+                            backgroundImage: FileImage(imageFile!))
                         : const CircleAvatar(
                             radius: 60.0,
                             backgroundImage: AssetImage('assets/avatar.png'),
@@ -157,12 +158,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     boxShadow: kElevationToShadow[2],
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white),
-                child: const Align(
+                child: Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: EdgeInsets.only(left: 8),
                     child: Text(
-                      'Ganesh Gaire',
+                      widget.firstname.toString() +
+                          " " +
+                          widget.lastname.toString(),
                     ),
                   ),
                 ),
@@ -197,12 +200,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     boxShadow: kElevationToShadow[2],
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white),
-                child: const Align(
+                child: Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: EdgeInsets.only(left: 8),
                     child: Text(
-                      '9866133280',
+                      widget.phonenumber.toString(),
                     ),
                   ),
                 ),
@@ -230,11 +233,20 @@ class _ProfilePageState extends State<ProfilePage> {
               ElevatedButton(
                 autofocus: true,
                 style: ElevatedButton.styleFrom(primary: Colors.blueAccent),
-                onPressed: () {
-                  Navigator.pop(context);
+                onPressed: () async {
+                  final prefs = await SharedPreferences.getInstance();
+                  prefs.remove('islogin');
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: ((context) {
+                        return const LoginPage();
+                      }),
+                    ),
+                  );
                 },
                 child: const Text(
-                  'Follow ',
+                  'Log Out ',
                   style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
               ),

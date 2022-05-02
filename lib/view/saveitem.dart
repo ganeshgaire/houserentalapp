@@ -63,16 +63,16 @@ class _SavedIteamState extends State<SavedIteam> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CircleAvatar(
+                      const CircleAvatar(
                         radius: 50,
                         backgroundImage: AssetImage('assets/house2.jpg'),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Column(
                         children: [
-                          Padding(
+                          const Padding(
                             padding: EdgeInsets.only(top: 8),
                             child: Text(
                               'The Moon House',
@@ -134,7 +134,7 @@ class _SavedIteamState extends State<SavedIteam> {
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                   Container(
@@ -142,22 +142,22 @@ class _SavedIteamState extends State<SavedIteam> {
                     width: 300,
                     color: Colors.black,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CircleAvatar(
+                      const CircleAvatar(
                         radius: 50,
                         backgroundImage: AssetImage('assets/house3.jpg'),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Column(
                         children: [
-                          Padding(
+                          const Padding(
                             padding: EdgeInsets.only(top: 8),
                             child: Text(
                               'The Royal House',
@@ -189,20 +189,20 @@ class _SavedIteamState extends State<SavedIteam> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 36, top: 10),
+                        padding: const EdgeInsets.only(left: 36, top: 10),
                         child: Column(
                           children: [
-                            Text(
+                            const Text(
                               '\$4200',
                               style: TextStyle(
                                   color: Colors.red,
                                   fontWeight: FontWeight.bold),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Row(
-                              children: [
+                              children: const [
                                 Icon(
                                   Icons.star,
                                   size: 14,

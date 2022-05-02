@@ -1,9 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:testapp/components/nearyou.dart';
 import 'package:testapp/components/normal.dart';
 import 'package:testapp/components/toprecom.dart';
+import 'mainpage.dart';
 
 import 'package:testapp/view/profile.dart';
+import 'package:testapp/model/signup_model.dart';
 
 class HomePages extends StatefulWidget {
   const HomePages({Key? key}) : super(key: key);
@@ -13,6 +19,9 @@ class HomePages extends StatefulWidget {
 }
 
 class _HomePagesState extends State<HomePages> {
+  String? firstname;
+  String? lastname;
+  String? phonenumber;
   int selectedIndex = 0;
   List iteams = [
     {
@@ -22,6 +31,26 @@ class _HomePagesState extends State<HomePages> {
     {"title": 'Normal'}
   ];
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  // @override
+  // void initState() {
+  //   userdataread();
+  //   // TODO: implement initState
+  //   super.initState();
+  // }
+
+  // userdataread() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final String? userData = prefs.getString('userData');
+
+  //   final data = jsonDecode(userData!);
+  //   setState(() {
+  //     firstname = data['first_name'];
+  //     lastname = data['last_name'];
+  //     phonenumber = data['mobile_no'];
+  //   });
+
+  //   print(data['id']);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +83,11 @@ class _HomePagesState extends State<HomePages> {
                     context,
                     MaterialPageRoute(
                       builder: ((context) {
-                        return const ProfilePage();
+                        return ProfilePage(
+                          firstname: firstname,
+                          lastname: lastname,
+                          phonenumber: phonenumber,
+                        );
                       }),
                     ),
                   );
@@ -74,8 +107,8 @@ class _HomePagesState extends State<HomePages> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Hello Ganesh!',
+            Text(
+              "Hello " + firstname.toString() + "!",
               style: TextStyle(fontSize: 15),
             ),
             const Text(
@@ -279,8 +312,8 @@ class _HomePagesState extends State<HomePages> {
                             width: 8,
                           ),
                           Text(
-                            '972 lokeshere Ct',
-                            style: TextStyle(),
+                            'Kirtipur-7,Kathmandu',
+                            style: TextStyle(fontSize: 10),
                           ),
                         ],
                       ),
@@ -314,12 +347,14 @@ class _HomePagesState extends State<HomePages> {
                       Row(
                         children: const [
                           Text(
-                            '\$3400',
+                            'Rs.150000/month',
                             style: TextStyle(
-                                color: Colors.red, fontWeight: FontWeight.bold),
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10),
                           ),
                           SizedBox(
-                            width: 30,
+                            width: 10,
                           ),
                           Icon(
                             Icons.star,
@@ -327,7 +362,7 @@ class _HomePagesState extends State<HomePages> {
                             color: Colors.orange,
                           ),
                           SizedBox(
-                            width: 5,
+                            width: 1,
                           ),
                           Text('4.8')
                         ],
@@ -373,7 +408,7 @@ class _HomePagesState extends State<HomePages> {
                       const Padding(
                         padding: EdgeInsets.only(top: 25),
                         child: Text(
-                          'The Royal House',
+                          'Aryal Niwas',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -387,7 +422,7 @@ class _HomePagesState extends State<HomePages> {
                             width: 8,
                           ),
                           Text(
-                            '972 Mahendra st',
+                            'Tillotama-4,Rupendehi',
                             style: TextStyle(),
                           ),
                         ],
@@ -401,7 +436,7 @@ class _HomePagesState extends State<HomePages> {
                           SizedBox(
                             width: 8,
                           ),
-                          Text('4 Bedroom'),
+                          Text('2 Bedroom'),
                         ],
                       ),
                       const SizedBox(
@@ -413,7 +448,7 @@ class _HomePagesState extends State<HomePages> {
                           SizedBox(
                             width: 8,
                           ),
-                          Text('3 Bathroom')
+                          Text('1 Bathroom')
                         ],
                       ),
                       const SizedBox(
@@ -422,7 +457,7 @@ class _HomePagesState extends State<HomePages> {
                       Row(
                         children: const [
                           Text(
-                            '\$2800',
+                            'Rs.10000/month',
                             style: TextStyle(
                                 color: Colors.red, fontWeight: FontWeight.bold),
                           ),

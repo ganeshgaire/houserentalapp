@@ -1,5 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:testapp/components/colorscomponent.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:testapp/view/addhouse.dart';
 
 import 'package:testapp/view/homepages.dart';
@@ -15,6 +17,9 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  late String firstnames;
+  String? lastname;
+  String? phonenumber;
   int _selectedIndex = 0;
   final List<Widget> _widgetOptions = <Widget>[
     const HomePages(),
@@ -31,6 +36,25 @@ class _MainPageState extends State<MainPage> {
   }
 
   @override
+  void initState() {
+    userdataread();
+
+    super.initState();
+  }
+
+  userdataread() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? userData = prefs.getString('userData');
+
+    final data = jsonDecode(userData!);
+    setState(() {
+      firstnames = data['first_name'];
+    });
+
+    print(data['id']);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Padding(
@@ -41,7 +65,7 @@ class _MainPageState extends State<MainPage> {
             clipBehavior: Clip.antiAlias,
             borderRadius: BorderRadius.circular(100),
             child: BottomNavigationBar(
-                backgroundColor: Color.fromARGB(255, 226, 219, 219),
+                backgroundColor: const Color.fromARGB(255, 226, 219, 219),
                 currentIndex: _selectedIndex,
                 type: BottomNavigationBarType.fixed,
                 onTap: _onItemTapped,
