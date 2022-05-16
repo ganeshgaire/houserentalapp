@@ -161,7 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: EdgeInsets.only(left: 8),
+                    padding: const EdgeInsets.only(left: 8),
                     child: Text(
                       widget.firstname.toString() +
                           " " +
@@ -203,7 +203,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: EdgeInsets.only(left: 8),
+                    padding: const EdgeInsets.only(left: 8),
                     child: Text(
                       widget.phonenumber.toString(),
                     ),

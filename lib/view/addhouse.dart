@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class AddHouse extends StatefulWidget {
-  AddHouse({Key? key}) : super(key: key);
+  const AddHouse({Key? key}) : super(key: key);
 
   @override
   State<AddHouse> createState() => _AddHouseState();
@@ -67,7 +67,7 @@ class _AddHouseState extends State<AddHouse> {
               color: Colors.amber,
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Container(
@@ -76,7 +76,7 @@ class _AddHouseState extends State<AddHouse> {
                     color: Colors.blue,
                     child: Text(text1),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Container(
@@ -96,7 +96,7 @@ class _AddHouseState extends State<AddHouse> {
               ),
               child: TextField(
                 controller: email,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.email),
                     border: InputBorder.none,
                     hintText: 'Email'),
@@ -113,7 +113,7 @@ class _AddHouseState extends State<AddHouse> {
               ),
               child: TextField(
                 controller: password,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.lock),
                     border: InputBorder.none,
                     hintText: 'Password'),

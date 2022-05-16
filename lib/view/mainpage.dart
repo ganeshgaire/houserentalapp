@@ -25,7 +25,7 @@ class _MainPageState extends State<MainPage> {
     const HomePages(),
     const OwnSearchPage(),
     const NotificationPage(),
-    AddHouse(),
+    const AddHouse(),
     const SavedIteam(),
   ];
 
@@ -51,7 +51,7 @@ class _MainPageState extends State<MainPage> {
       firstnames = data['first_name'];
     });
 
-    print(data['id']);
+    //print(data['id']);
   }
 
   @override

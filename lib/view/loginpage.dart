@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:testapp/components/colorscomponent.dart';
-import 'package:testapp/model/login_model.dart';
+
 import 'package:testapp/view/mainpage.dart';
 import 'package:testapp/view/signup.dart';
 import 'package:http/http.dart' as http;
@@ -20,26 +20,31 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String? email;
+  String? password;
   final snackBar = const SnackBar(
     content: Text('Login Unsucessfull'),
   );
   final scaffoldKey = GlobalKey<ScaffoldState>();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  late LoginRequestModel requestModel;
+
   bool isApiCallProcess = false;
 
   Future login() async {
+    var body = {
+      "email": email,
+      "password": password,
+    };
     final prefs = await SharedPreferences.getInstance();
-    String url =
-        "https://ecommerce.nctbutwal.com/api/v2/ecommerce/customer/login";
-    final response =
-        await http.post(Uri.parse(url), body: requestModel.toJson());
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body)["data"];
-      final userData = jsonEncode(data);
+    String url = "http://192.168.0.20/houserentapi/register/login.php";
+
+    final response = await http.post(Uri.parse(url), body: jsonEncode(body));
+    final result = jsonDecode(response.body);
+    print(result["status"]);
+
+    if (result["status"] == 200) {
       prefs.setBool('islogin', true);
-      prefs.setString('userData', userData);
+      // prefs.setString('userData', userData);
 
       setState(() {
         isApiCallProcess = false;
@@ -64,12 +69,6 @@ class _LoginPageState extends State<LoginPage> {
   static Future<void> pop({bool? animated}) async {
     await SystemChannels.platform
         .invokeMethod<void>('SystemNavigator.pop', animated);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    requestModel = LoginRequestModel();
   }
 
   @override
@@ -106,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               const Text(
-                '\"House Rental System\"',
+                '"House Rental System"',
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -132,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 10, right: 10),
                         child: TextFormField(
-                          onSaved: (input) => requestModel.email = input,
+                          onSaved: (input) => email = input,
                           validator: ((value) {
                             if (value!.isEmpty) {
                               return 'field can\'t be empty ';
@@ -158,11 +157,12 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 10, right: 10),
                         child: TextFormField(
-                          onSaved: (input) => requestModel.password = input,
+                          onSaved: (input) => password = input,
                           validator: ((value) {
                             if (value!.isEmpty) {
                               return 'field can\'t be empty ';
                             }
+                            return null;
                           }),
                           decoration: InputDecoration(
                               filled: true,
@@ -263,8 +263,8 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                    primary: Color.fromARGB(255, 135, 90, 214)),
-                child: Text(
+                    primary: const Color.fromARGB(255, 135, 90, 214)),
+                child: const Text(
                   'Skip Now',
                 ),
               )
