@@ -1,15 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:testapp/components/nearyou.dart';
-import 'package:testapp/components/normal.dart';
-import 'package:testapp/components/toprecom.dart';
-import 'mainpage.dart';
+import 'package:testapp/model/housemodel.dart';
 
 import 'package:testapp/view/profile.dart';
-import 'package:testapp/model/signup_model.dart';
+import 'package:http/http.dart' as http;
 
 class HomePages extends StatefulWidget {
   const HomePages({Key? key}) : super(key: key);
@@ -23,34 +18,43 @@ class _HomePagesState extends State<HomePages> {
   String? lastname;
   String? phonenumber;
   int selectedIndex = 0;
-  List iteams = [
-    {
-      "title": "Top Recomended",
-    },
-    {"title": 'Near you'},
-    {"title": 'Normal'}
-  ];
+  bool isloading = false;
+  List<HouseModel> detail = [];
+  List<HouseModel> myhouse = [];
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  // @override
-  // void initState() {
-  //   userdataread();
-  //   // TODO: implement initState
-  //   super.initState();
-  // }
+  Future getDatafromApi() async {
+    try {
+      setState(() {
+        isloading = true;
+      });
 
-  // userdataread() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final String? userData = prefs.getString('userData');
+      var response = await http.get(
+        Uri.parse(
+            "http://192.168.1.171/houserentapi/housedetail/fetchhousedetail.php"),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
 
-  //   final data = jsonDecode(userData!);
-  //   setState(() {
-  //     firstname = data['first_name'];
-  //     lastname = data['last_name'];
-  //     phonenumber = data['mobile_no'];
-  //   });
-
-  //   print(data['id']);
-  // }
+      //print(response.body);
+      final data = jsonDecode(response.body);
+      print(data);
+      for (var u in data) {
+        detail.add(HouseModel.fromJson(u));
+      }
+      if (mounted) {
+        setState(() {
+          isloading = false;
+          myhouse = detail;
+        });
+      }
+      // print(myhouse[0].houseName);
+      return 'sucess';
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +113,7 @@ class _HomePagesState extends State<HomePages> {
           children: [
             Text(
               "Hello " + firstname.toString() + "!",
-              style: TextStyle(fontSize: 15),
+              style: const TextStyle(fontSize: 15),
             ),
             const Text(
               'Find your sweet Home',
@@ -122,7 +126,7 @@ class _HomePagesState extends State<HomePages> {
               height: 50,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                color: Color.fromARGB(255, 231, 225, 225),
+                color: const Color.fromARGB(255, 231, 225, 225),
               ),
               child: Row(
                 children: const [
@@ -143,343 +147,14 @@ class _HomePagesState extends State<HomePages> {
                 ],
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              height: 50,
-              // child: ListView(
-              //   scrollDirection: Axis.horizontal,
-              //   children: [
-              //     Column(
-              //       children: [
-              //         const Text(
-              //           'Top Recommended',
-              //           style: TextStyle(
-              //               fontSize: 18,
-              //               color: Colors.purple,
-              //               fontWeight: FontWeight.bold),
-              //         ),
-              //         const SizedBox(
-              //           height: 10,
-              //         ),
-              //         Container(
-              //           color: Colors.purple,
-              //           height: 3,
-              //           width: 150,
-              //         )
-              //       ],
-              //     ),
-              //     const SizedBox(
-              //       width: 15,
-              //     ),
-              //     const Text(
-              //       'Near You',
-              //       style: TextStyle(fontSize: 18, color: Colors.grey),
-              //     ),
-              //     const SizedBox(
-              //       width: 15,
-              //     ),
-              //     const Text(
-              //       'Normal',
-              //       style: TextStyle(fontSize: 18, color: Colors.grey),
-              //     ),
-              //     const SizedBox(
-              //       width: 15,
-              //     ),
-              //     const Text(
-              //       'Vip Room',
-              //       style: TextStyle(fontSize: 18, color: Colors.grey),
-              //     ),
-              //     const Text(
-              //       'Best',
-              //       style: TextStyle(fontSize: 18, color: Colors.grey),
-              //     ),
-              //   ],
-              // ),
-
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: iteams.length,
-                  itemBuilder: ((context, index) {
-                    return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              selectedIndex = index;
-                            });
-                          },
-                          child: Column(
-                            children: [
-                              Text(
-                                iteams[index]['title'],
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: index == selectedIndex
-                                        ? Colors.purple
-                                        : Colors.grey,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              index == selectedIndex
-                                  ? Container(
-                                      color: Colors.purple,
-                                      height: 3,
-                                      width: 120,
-                                    )
-                                  : Container()
-                            ],
-                          ),
-                        ));
-                  })),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            selectedIndex == 0
-                ? TopRecom()
-                : selectedIndex == 1
-                    ? NearYou()
-                    : NormalRoom(),
-            const SizedBox(
-              height: 25,
-            ),
-            Row(
-              children: const [
-                Text(
-                  'Best Offer',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  width: 210,
-                ),
-                Text(
-                  'See All',
-                  style: TextStyle(color: Colors.grey),
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
-              height: height * 0.25,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: const Color.fromARGB(255, 229, 226, 226),
-              ),
-              child: Row(
-                children: [
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Container(
-                    height: height * 0.23,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                    ),
-                    width: width * 0.45,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      image: const DecorationImage(
-                          image: AssetImage('assets/house.jpg'),
-                          fit: BoxFit.cover),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(top: 25),
-                        child: Text(
-                          'The Moon House',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Row(
-                        children: const [
-                          Icon(Icons.share_location),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                            'Kirtipur-7,Kathmandu',
-                            style: TextStyle(fontSize: 10),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Row(
-                        children: const [
-                          Icon(Icons.bed),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text('3 Bedroom'),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Row(
-                        children: const [
-                          Icon(Icons.bathroom),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text('4 Bathroom')
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Row(
-                        children: const [
-                          Text(
-                            'Rs.150000/month',
-                            style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 10),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Icon(
-                            Icons.star,
-                            size: 14,
-                            color: Colors.orange,
-                          ),
-                          SizedBox(
-                            width: 1,
-                          ),
-                          Text('4.8')
-                        ],
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-            SizedBox(
-              height: height * 0.02,
-            ),
-            Container(
-              height: height * 0.25,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: const Color.fromARGB(255, 229, 226, 226),
-              ),
-              child: Row(
-                children: [
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Container(
-                    height: height * 0.23,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                    ),
-                    width: width * 0.45,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      image: const DecorationImage(
-                          image: AssetImage('assets/house1.jpg'),
-                          fit: BoxFit.cover),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(top: 25),
-                        child: Text(
-                          'Aryal Niwas',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Row(
-                        children: const [
-                          Icon(Icons.share_location),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                            'Tillotama-4,Rupendehi',
-                            style: TextStyle(),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Row(
-                        children: const [
-                          Icon(Icons.bed),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text('2 Bedroom'),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Row(
-                        children: const [
-                          Icon(Icons.bathroom),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text('1 Bathroom')
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Row(
-                        children: const [
-                          Text(
-                            'Rs.10000/month',
-                            style: TextStyle(
-                                color: Colors.red, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            width: 30,
-                          ),
-                          Icon(
-                            Icons.star,
-                            size: 14,
-                            color: Colors.orange,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text('4.5')
-                        ],
-                      )
-                    ],
-                  )
-                ],
-              ),
-            )
+            IconButton(
+                onPressed: () {
+                  getDatafromApi();
+                },
+                icon: const Icon(Icons.email))
+            // ListView.builder(itemBuilder: (BuildContext context, int index) {
+            //   return const InkWell();
+            // })
           ],
         ),
       ),

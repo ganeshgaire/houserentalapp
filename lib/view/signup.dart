@@ -1,7 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:testapp/model/signup_model.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -11,24 +12,33 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  String? firstname;
+  String? lastname;
+  String? email;
+  String? password;
   final snackBar = const SnackBar(
     content: Text('Email Already Exist'),
   );
   final sucessmsg = const SnackBar(
     content: Text('sucessfully register'),
   );
-  late SignupModel signupmodel;
+
   String? data;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   Future signup() async {
     try {
-      String url =
-          "https://ecommerce.nctbutwal.com/api/v2/ecommerce/customer/register";
-      final response =
-          await http.post(Uri.parse(url), body: signupmodel.toJson());
-      print(response.statusCode);
-      if (response.statusCode == 200) {
+      var body = {
+        "fname": firstname,
+        "lname": lastname,
+        "email": email,
+        "password": password
+      };
+      String url = "http://192.168.1.171/houserentapi/register/register.php";
+      final response = await http.post(Uri.parse(url), body: jsonEncode(body));
+      final result = jsonDecode(response.body);
+      print(result);
+      if (result["status"] == 200) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(sucessmsg);
       }
@@ -43,7 +53,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void initState() {
     super.initState();
-    signupmodel = SignupModel();
   }
 
   @override
@@ -83,7 +92,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       padding: const EdgeInsets.only(left: 10, right: 10),
                       child: TextFormField(
                         onSaved: (input) {
-                          signupmodel.firstname = input;
+                          firstname = input;
                         },
                         validator: ((value) {
                           if (value!.isEmpty) {
@@ -105,7 +114,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10),
                       child: TextFormField(
-                        onSaved: (input) => signupmodel.lastname = input,
+                        onSaved: (input) => lastname = input,
                         validator: ((value) {
                           if (value!.isEmpty) {
                             return 'field can\'t be empty ';
@@ -126,8 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10),
                       child: TextFormField(
-                        onSaved: (input) => signupmodel.phonenumber = input,
-                        keyboardType: TextInputType.number,
+                        onSaved: (input) => email = input,
                         validator: ((value) {
                           if (value!.isEmpty) {
                             return 'field can\'t be empty ';
@@ -136,10 +144,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           return null;
                         }),
                         decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.phone),
+                            prefixIcon: const Icon(Icons.mail),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8)),
-                            hintText: 'PhoneNumber'),
+                            hintText: 'Email'),
                       ),
                     ),
                     const SizedBox(
@@ -148,7 +156,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10),
                       child: TextFormField(
-                        onSaved: (input) => signupmodel.password = input,
+                        onSaved: (input) => password = input,
                         obscureText: true,
                         validator: ((value) {
                           if (value!.isEmpty) {

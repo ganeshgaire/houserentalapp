@@ -30,13 +30,15 @@ class _LoginPageState extends State<LoginPage> {
 
   bool isApiCallProcess = false;
 
+  String userdata = '';
+
   Future login() async {
     var body = {
       "email": email,
       "password": password,
     };
     final prefs = await SharedPreferences.getInstance();
-    String url = "http://192.168.0.20/houserentapi/register/login.php";
+    String url = "http://192.168.1.171/houserentapi/register/login.php";
 
     final response = await http.post(Uri.parse(url), body: jsonEncode(body));
     final result = jsonDecode(response.body);
@@ -44,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (result["status"] == 200) {
       prefs.setBool('islogin', true);
-      // prefs.setString('userData', userData);
+      prefs.setString('userData', userdata);
 
       setState(() {
         isApiCallProcess = false;
