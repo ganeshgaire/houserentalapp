@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:testapp/adminpanel/adminloginpage.dart';
 
 import 'package:testapp/components/colorscomponent.dart';
 
@@ -38,16 +39,19 @@ class _LoginPageState extends State<LoginPage> {
       "password": password,
     };
     final prefs = await SharedPreferences.getInstance();
-    String url = "http://192.168.1.171/houserentapi/register/login.php";
+    String url = "http://192.168.1.34/houserentapi/register/login.php";
 
     final response = await http.post(Uri.parse(url), body: jsonEncode(body));
     final result = jsonDecode(response.body);
-    print(result["status"]);
+    //print(result["status"]);
 
     if (result["status"] == 200) {
+      final data = jsonDecode(response.body)["data"];
+
+      final userdata = jsonEncode(data);
       prefs.setBool('islogin', true);
       prefs.setString('userData', userdata);
-
+      print(data["phone_number"]);
       setState(() {
         isApiCallProcess = false;
       });
@@ -159,6 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 10, right: 10),
                         child: TextFormField(
+                          obscureText: true,
                           onSaved: (input) => password = input,
                           validator: ((value) {
                             if (value!.isEmpty) {
@@ -253,23 +258,16 @@ class _LoginPageState extends State<LoginPage> {
                   )
                 ],
               ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: ((context) {
-                        return const MainPage();
-                      }),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                    primary: const Color.fromARGB(255, 135, 90, 214)),
-                child: const Text(
-                  'Skip Now',
-                ),
-              )
+              TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const AdminLoginPage(),
+                        ));
+                  },
+                  child: const Text("Login As Admin"))
             ],
           ),
         ),

@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:testapp/view/addhouse.dart';
+import 'package:testapp/adminpanel/bookedhouse.dart';
 
 import 'package:testapp/view/homepages.dart';
-import 'package:testapp/view/notificationpage.dart';
-import 'package:testapp/view/saveitem.dart';
+import 'package:testapp/view/profile.dart';
 import 'package:testapp/view/searchpage.dart';
 
 class MainPage extends StatefulWidget {
@@ -17,16 +13,15 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  late String firstnames;
-  String? lastname;
-  String? phonenumber;
+  // late String firstnames;
+  // String? lastname;
+  // String? phonenumber;
   int _selectedIndex = 0;
   final List<Widget> _widgetOptions = <Widget>[
     const HomePages(),
     const OwnSearchPage(),
-    const NotificationPage(),
-    const AddHouse(),
-    const SavedIteam(),
+    const BookedPage(),
+    ProfilePage(),
   ];
 
   void _onItemTapped(int index) {
@@ -37,22 +32,22 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    userdataread();
+    // userdataread();
 
     super.initState();
   }
 
-  userdataread() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? userData = prefs.getString('userData');
+  // userdataread() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final String? userData = prefs.getString('userData');
 
-    final data = jsonDecode(userData!);
-    setState(() {
-      firstnames = data['first_name'];
-    });
+  //   final data = jsonDecode(userData!);
+  //   setState(() {
+  //     firstnames = data['fname'];
+  //   });
 
-    //print(data['id']);
-  }
+  //   //print(data['id']);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -88,21 +83,14 @@ class _MainPageState extends State<MainPage> {
                       label: ''),
                   BottomNavigationBarItem(
                       icon: Icon(
-                        Icons.notification_add,
+                        Icons.bookmark,
                         color: Colors.purple,
                         size: 30,
                       ),
                       label: ''),
                   BottomNavigationBarItem(
                       icon: Icon(
-                        Icons.chat,
-                        color: Colors.purple,
-                        size: 30,
-                      ),
-                      label: ''),
-                  BottomNavigationBarItem(
-                      icon: Icon(
-                        Icons.bookmark_add,
+                        Icons.person,
                         color: Colors.purple,
                         size: 30,
                       ),

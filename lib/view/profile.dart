@@ -9,8 +9,10 @@ import 'package:testapp/view/loginpage.dart';
 class ProfilePage extends StatefulWidget {
   String? firstname;
   String? lastname;
+  String? email;
   String? phonenumber;
-  ProfilePage({Key? key, this.firstname, this.lastname, this.phonenumber})
+  ProfilePage(
+      {Key? key, this.firstname, this.lastname, this.email, this.phonenumber})
       : super(key: key);
 
   @override
@@ -22,6 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void pickimage() async {
     try {
+      print(imageFile);
       final pickedFile = await ImagePicker().pickImage(
         source: ImageSource.gallery,
       );
@@ -180,12 +183,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     boxShadow: kElevationToShadow[2],
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white),
-                child: const Align(
+                child: Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: EdgeInsets.only(left: 8),
+                    padding: const EdgeInsets.only(left: 8),
                     child: Text(
-                      'ganeshgaire121@gmail.com',
+                      widget.email.toString(),
                     ),
                   ),
                 ),
@@ -212,23 +215,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(
                 height: 10,
-              ),
-              Container(
-                height: 40,
-                width: width,
-                decoration: BoxDecoration(
-                    boxShadow: kElevationToShadow[2],
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white),
-                child: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Text(
-                      'Buddhabhumi-8,Kapilvastu',
-                    ),
-                  ),
-                ),
               ),
               ElevatedButton(
                 autofocus: true,

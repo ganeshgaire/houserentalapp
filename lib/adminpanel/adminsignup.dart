@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+class AdminSignupPage extends StatefulWidget {
+  const AdminSignupPage({Key? key}) : super(key: key);
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<AdminSignupPage> createState() => _AdminSignupPageState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _AdminSignupPageState extends State<AdminSignupPage> {
   String? firstname;
   String? lastname;
   String? phonenumber;
@@ -36,7 +36,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         "email": email,
         "password": password
       };
-      String url = "http://192.168.1.34/houserentapi/register/register.php";
+      String url = "http://192.168.1.34/houserentapi/admin/register.php";
       final response = await http.post(Uri.parse(url), body: jsonEncode(body));
       final result = jsonDecode(response.body);
       print(result);
@@ -159,14 +159,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10),
                       child: TextFormField(
-                        keyboardType: TextInputType.emailAddress,
                         onSaved: (input) => email = input,
                         validator: ((value) {
                           if (value!.isEmpty) {
                             return 'field can\'t be empty ';
-                          }
-                          if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
-                            return "Please enter a valid email address";
                           }
 
                           return null;
@@ -190,10 +186,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           if (value!.isEmpty) {
                             return 'field can\'t be empty ';
                           }
-                          if (!RegExp(r"^(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$")
-                              .hasMatch(value)) {
-                            return "Password Format Incorrect";
-                          }
+
                           return null;
                         }),
                         decoration: InputDecoration(
